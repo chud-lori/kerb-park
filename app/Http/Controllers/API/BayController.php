@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\BayPostRequest;
 use App\Models\Bay;
 
 class BayController extends Controller
@@ -14,12 +14,11 @@ class BayController extends Controller
         $data = [
             'status' => 1,
             'data' => $bays,
-            'message' => 'all bays records'
+            'message' => 'all bays records',
 
         ];
 
-        if (count($bays) < 1)
-        {
+        if (count($bays) < 1) {
             $data['status'] = 0;
             $data['data'] = null;
             $data['message'] = "no bays records";
@@ -35,12 +34,11 @@ class BayController extends Controller
         $data = [
             'status' => 1,
             'data' => $bays,
-            'message' => 'all available bays'
+            'message' => 'all available bays',
 
         ];
 
-        if (count($bays) < 1)
-        {
+        if (count($bays) < 1) {
             $data['status'] = 0;
             $data['data'] = null;
             $data['message'] = "no bay available";
@@ -56,11 +54,10 @@ class BayController extends Controller
         $data = [
             'status' => 1,
             'data' => $bays,
-            'message' => 'all occupied bays'
+            'message' => 'all occupied bays',
         ];
 
-        if (count($bays) < 1)
-        {
+        if (count($bays) < 1) {
             $data['status'] = 0;
             $data['data'] = null;
             $data['message'] = "no bay occupied";
@@ -76,11 +73,10 @@ class BayController extends Controller
         $data = [
             'status' => 1,
             'data' => $bay,
-            'message' => 'bay available'
+            'message' => 'bay available',
         ];
 
-        if (!$bay)
-        {
+        if (!$bay) {
             $data['status'] = 0;
             $data['message'] = 'error not found';
             unset($data['data']);
@@ -88,12 +84,22 @@ class BayController extends Controller
             return response()->json($data);
         }
 
-        if ($bay->status == 'occupied')
-        {
+        if ($bay->status == 'occupied') {
             $data['status'] = 0;
             $data['message'] = 'bay not available';
         }
 
         return response()->json($data);
+    }
+
+    public function addBay(BayPostRequest $request)
+    {
+        $bay = Bay::create(['bay_code' => $request->bay_code]);
+
+        return response()->json([
+            'status' => 1,
+            'data' => $bay,
+            'message' => 'bay added',
+        ]);
     }
 }

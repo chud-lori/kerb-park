@@ -24,7 +24,8 @@ Route::get('/bay/all', [BayController::class, 'getAllBays']);
 Route::get('/bay/available', [BayController::class, 'getAvailableBays']);
 Route::get('/bay/occupied', [BayController::class, 'getOccupiedBays']);
 Route::get('/bay/check/{bayCode}', [BayController::class, 'checkAvailablity']);
+Route::post('/bay', [BayController::class, 'addBay']);
 
 // Book
 Route::post('/book', [BookController::class, 'bookBay']);
-Route::get('/book', [BookController::class, 'a']);
+Route::post('/book/pay', [BookController::class, 'pay']);

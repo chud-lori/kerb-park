@@ -7,7 +7,6 @@ use App\Http\Requests\BookPostRequest;
 use App\Models\Bay;
 use App\Models\Book;
 use App\Models\Car;
-use Carbon\Carbon;
 
 class BookController extends Controller
 {
@@ -29,27 +28,40 @@ class BookController extends Controller
         $bay->save();
 
         $data = [
-            'bay' => $bay,
-            'car' => $car,
-            'book' => $book,
+            'status' => 1,
+            'data' => [$bay, $car, $book],
+            'message' => 'book success',
         ];
 
         return response()->json($data);
 
     }
 
-    public function a()
+    public function pay(Request $request)
     {
-        //$s = \DB::table('cars')->where('id', '<', 100)->get();
-        //foreach ($s as $key => $value) {
-        //  $value->license_plate = $key;
-        // dd($value->license_plate);
-        // $value->update();
-        //}
-        $now = Carbon::parse(date('Y-m-d H:i:s'));
-        $pay = Carbon::parse(Book::where('id', 1)->first()->start_session);
-        $minutes = $now->diffInMinutes($pay);
-        $hours = $now->diffInMinutes($pay) / 60;
+        $car = Car::where('license_plate', $request->license_plate)->first();
+        $book = Book::where([['car_id', $car->id], ['payment', 'unpaid']])->first();
+        if (!$book) {
+            return response()->json(
+                ['status' => 0,
+                    'message' => 'car not found']
+            );
+        }
 
+        if ($request->pay < $book->bill) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'uangnya kurang',
+            ]);
+        }
+
+        $book->payment = 'paid';
+        $book->save();
+        Bay::where('id', $book->bay_id)->update(['status', 'available']);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'payment succesful',
+        ]);
     }
 }
