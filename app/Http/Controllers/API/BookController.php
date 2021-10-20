@@ -7,6 +7,7 @@ use App\Http\Requests\BookPostRequest;
 use App\Models\Bay;
 use App\Models\Book;
 use App\Models\Car;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
@@ -40,24 +41,24 @@ class BookController extends Controller
     public function pay(Request $request)
     {
         $car = Car::where('license_plate', $request->license_plate)->first();
-        $book = Book::where([['car_id', $car->id], ['payment', 'unpaid']])->first();
+        $book = Book::where(['car_id' => $car->id, 'payment' => 'unpaid'])->first();
         if (!$book) {
             return response()->json(
                 ['status' => 0,
-                    'message' => 'car not found']
+                    'message' => 'book not found']
             );
         }
 
         if ($request->pay < $book->bill) {
             return response()->json([
                 'status' => 0,
-                'message' => 'uangnya kurang',
+                'message' => 'payment is not enough',
             ]);
         }
 
         $book->payment = 'paid';
         $book->save();
-        Bay::where('id', $book->bay_id)->update(['status', 'available']);
+        Bay::where('id', $book->bay_id)->update(['status' => 'available']);
 
         return response()->json([
             'status' => 1,

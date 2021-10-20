@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+    database:
+        image: postgres:9.6
+        container_name: database
+        restart: unless-stopped
+        environment:
+            POSTGRES_PASSWORD: secret
+            POSTGRES_DB: kerb
+        volumes:
+            - ./postgres-data:/var/lib/postgresql/data
+        ports:
+            - "54322:5432"
+    php-apache:
+        container_name: kerbapp
+        build: .
+        ports:
+            - "8000:80"
+        volumes:
+            - ./src:/var/www/kerb
+            - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+        depends_on:
+            - database

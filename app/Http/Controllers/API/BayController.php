@@ -24,7 +24,7 @@ class BayController extends Controller
             $data['message'] = "no bays records";
         };
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getAvailableBays()

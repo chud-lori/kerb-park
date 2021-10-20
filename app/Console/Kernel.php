@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Book;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -63,7 +64,7 @@ class Kernel extends ConsoleKernel
             $allUnpaid = DB::table('books')->where('payment', 'unpaid')->get();
             foreach ($allUnpaid as $key => $value) {
                 $bill = $this->getPlus($value->start_session);
-                DB::table('books')->where('id', $value->id)->update(['bill' => $bill]);
+                Book::where('id', $value->id)->update(['bill' => $bill]);
             }
         })->hourly();
     }
