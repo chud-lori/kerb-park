@@ -44,7 +44,7 @@ class BayController extends Controller
             $data['message'] = "no bay available";
         };
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getOccupiedBays()
@@ -63,7 +63,7 @@ class BayController extends Controller
             $data['message'] = "no bay occupied";
         };
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function checkAvailablity($bayCode)
@@ -78,15 +78,17 @@ class BayController extends Controller
 
         if (!$bay) {
             $data['status'] = 0;
-            $data['message'] = 'error not found';
+            $data['message'] = 'record not found';
             unset($data['data']);
 
-            return response()->json($data);
+            return response()->json($data, 404);
         }
 
         if ($bay->status == 'occupied') {
             $data['status'] = 0;
             $data['message'] = 'bay not available';
+
+            return response()->json($data, 404);
         }
 
         return response()->json($data);
@@ -96,10 +98,12 @@ class BayController extends Controller
     {
         $bay = Bay::create(['bay_code' => $request->bay_code]);
 
-        return response()->json([
+        $data = [
             'status' => 1,
             'data' => $bay,
             'message' => 'bay added',
-        ]);
+        ];
+
+        return response()->json($data, 201);
     }
 }

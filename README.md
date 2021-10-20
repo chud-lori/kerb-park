@@ -8,7 +8,8 @@
 ## Set Up
 
 -   `cp .env.example .env`
--   Run `composer install` to install the dependencies
+-   `composer update`
+-   `composer install`
 
 <!-- ## Run Test
 ```bash

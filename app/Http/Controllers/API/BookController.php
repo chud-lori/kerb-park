@@ -34,7 +34,7 @@ class BookController extends Controller
             'message' => 'book success',
         ];
 
-        return response()->json($data);
+        return response()->json($data, 200);
 
     }
 
@@ -46,14 +46,14 @@ class BookController extends Controller
             return response()->json(
                 ['status' => 0,
                     'message' => 'book not found']
-            );
+                , 400);
         }
 
         if ($request->pay < $book->bill) {
             return response()->json([
                 'status' => 0,
                 'message' => 'payment is not enough',
-            ]);
+            ], 400);
         }
 
         $book->payment = 'paid';
@@ -63,6 +63,21 @@ class BookController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'payment succesful',
-        ]);
+        ], 204);
+    }
+
+    public function getBook($license_plate)
+    {
+        $book = Book::whereHas('car', function ($q) use ($license_plate) {
+            $q->where('license_plate', $license_plate);
+        })->first();
+
+        $data = [
+            'status' => 1,
+            'data' => $book,
+            'message' => 'get the book detail along with price',
+        ];
+
+        return response()->json($data, 200);
     }
 }

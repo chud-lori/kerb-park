@@ -27,5 +27,6 @@ Route::get('/bay/check/{bayCode}', [BayController::class, 'checkAvailablity']);
 Route::post('/bay', [BayController::class, 'addBay']);
 
 // Book
+Route::get('/book/{license_plate}', [BookController::class, 'getBook']);
 Route::post('/book', [BookController::class, 'bookBay']);
 Route::post('/book/pay', [BookController::class, 'pay']);
