@@ -18,29 +18,23 @@ pytest -vv
 
 ## Run
 
-Run this command and access the web app at `localhost:5000`
+Run this command and access the app at `localhost:8000`
 
 ```bash
-php artisan schedule:run
+php artisan migrate
+php artisan db:seed
+php artisan schedule:work
 php artisan serve
 ```
 
 <!-- ## Run in docker
-```bash
-docker build -t geocode-flask:1.0 .
-docker run --name flaskgeo -d -p 5000:5000 --env FLASK_APP=setup.py --env FLASK_ENV=production geocode-flask:1.0
-```
-Access `localhost:5000` and input the destination
 
-## How to use
-* Make sure the application running well using above instructions
-* Access `http://localhost:5000`
-* Type the destination and hit 'Get'
-* The result will served in json format if valid, otherwise will return with several status code, list of status code
-    - 0: location or destination not found
-    - 1: resulting destination and origin distance
-    - 2: distance between origin and destination not found, destination might too far from origin
-    - 3: destination location is inside origin's area -->
+```bash
+docker build -t kerb:1.0 .
+docker run --name kerbapp -d -p 8000:80 kerb:1.0
+```
+
+Access `localhost:8000` and input the destination -->
 
 ## Contributing
 
