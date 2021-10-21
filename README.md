@@ -13,8 +13,12 @@
 
 <!-- ## Run Test
 ```bash
-pytest -vv
+
 ``` -->
+
+## Import database file
+
+You can import postgresql database in file called kerb.sql
 
 ## Run
 
